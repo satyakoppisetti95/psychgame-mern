@@ -24,6 +24,22 @@ const login = async (userData) => {
   return response.data
 }
 
+const getMe = async (token) => {
+  const config = {
+    headers: {
+        Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await axios.get(API_URL + 'me',config)
+  if(response.data){
+    const user = JSON.parse(localStorage.getItem('user'))
+    user.game = response.data.game
+    user.isInGame = response.data.isInGame
+    localStorage.setItem('user', JSON.stringify(user))
+  }
+  return response.data
+}
+
 // Logout user
 const logout = () => {
   console.log('logout')
@@ -34,6 +50,7 @@ const authService = {
   register,
   logout,
   login,
+  getMe
 }
 
 export default authService

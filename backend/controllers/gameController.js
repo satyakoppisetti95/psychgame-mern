@@ -149,7 +149,7 @@ exports.getGame = asyncHandler(async (req, res) => {
     if(!game){
         throw new Error('Game not found');
     }
-    res.status(200).json(game);
+    res.status(200).json(game[0]);
 });
 
 

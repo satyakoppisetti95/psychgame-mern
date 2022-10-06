@@ -43,6 +43,20 @@ export const login = createAsyncThunk('auth/login', async (user, thunkAPI) => {
     }
 })
 
+export const getMe = createAsyncThunk('auth/getMe', async (_, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token
+        return await authService.getMe(token)
+    } catch (error) {
+        const message =
+            (error.response && error.response.data && error.response.data.message) ||
+            error.message ||
+            error.toString()
+        return thunkAPI.rejectWithValue(message)
+    }
+})
+
+
 export const logout = createAsyncThunk('auth/logout', async () => {
     await authService.logout()
 })
@@ -90,6 +104,10 @@ export const authSlice = createSlice({
             })
             .addCase(logout.fulfilled, (state) => {
                 state.user = null
+            })
+            .addCase(getMe.fulfilled, (state, action) => {
+                state.user.game = action.payload.gameId
+                state.user.isInGame = action.payload.isInGame
             })
     },
 })
